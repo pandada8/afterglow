@@ -56,7 +56,7 @@ class Player {
 	init(_callback){
 		let videoelement = this.videoelement.node;
 		let options = this.config.options;
-		
+
 		// initiate videojs and do some post initiation stuff
 		var player = window.videojs(videoelement, options).ready(function(){
 
@@ -78,9 +78,10 @@ class Player {
 
 			this.on('play', () => {
 				// Stop all other players if there are any on play
-				for( let key in window.videojs.players ) {
-				    if(window.videojs.getPlayers()[key] !== null && window.videojs.getPlayers()[key].id_ !== this.id_){
-				    	window.videojs.getPlayers()[key].pause();
+				let players = window.videojs.getPlayers()
+				for( let key in players ) {
+				    if(players[key] !== null && players[key].id_ !== this.id_){
+				    	players[key].pause();
 				    }
 				}
 			});
@@ -109,7 +110,7 @@ class Player {
 
 		// Remove sublime stuff
 		this.videoelement.removeClass("sublime");
-		
+
 		// Check for IE9 - IE11
 		let ie = this.util.ie().actualVersion;
 		if(ie >= 8 && ie <= 11){ // @see afterglow-lib.js
@@ -144,7 +145,7 @@ class Player {
 	 */
 	applyYoutubeClasses(){
 		this.videoelement.addClass("vjs-youtube");
-		
+
 		// Check for native playback
 		if(document.querySelector('video').controls){
 			this.videoelement.addClass("vjs-using-native-controls");
@@ -180,7 +181,7 @@ class Player {
 		return parseFloat(ratio);
 	}
 
-	/** 
+	/**
 	 * Gets the current player's skin name for further use in css variables and so on.
 	 * @return {string}
 	 */
@@ -205,7 +206,7 @@ class Player {
 		this.videojs.dispose();
 		this.alive = false;
 	}
-	
+
 	/**
 	 * Getter for the player
 	 */

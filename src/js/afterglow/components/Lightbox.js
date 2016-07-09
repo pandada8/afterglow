@@ -28,8 +28,8 @@ class Lightbox extends DOMElement{
 	build(){
 		// Prepare the lightbox elements
 		let cover = this.buildCover();
-		let lightbox = this.buildLightbox(); 
-		
+		let lightbox = this.buildLightbox();
+
 		this.appendDomElement(cover, 'cover');
 		this.appendDomElement(lightbox, 'lightbox');
 	}
@@ -117,9 +117,10 @@ class Lightbox extends DOMElement{
 		});
 
 		// Stop all active players if there are any playing
-		for(let key in window.videojs.players) {
-		    if(window.videojs.players[key] !== null && window.videojs.players[key].id_ !== this.playerid){
-		    	window.videojs.players[key].pause();
+		let players = window.videojs.getPlayers()
+		for(let key in players) {
+		    if(players[key] !== null && players[key].id_ !== this.playerid){
+		    	players[key].pause();
 		    }
 		}
 
@@ -130,8 +131,8 @@ class Lightbox extends DOMElement{
 		});
 
 		// bind the closing event
-		this.cover.bind('click',() => { 
-			this.close(); 
+		this.cover.bind('click',() => {
+			this.close();
 		});
 
 		// bind the escape key
@@ -154,7 +155,7 @@ class Lightbox extends DOMElement{
 	 */
 	resize(){
 		// Standard HTML5 player
-		if(this.lightbox.videoelement !== undefined){			
+		if(this.lightbox.videoelement !== undefined){
 			var ratio = this.lightbox.videoelement.getAttribute("data-ratio");
 			if(this.lightbox.videoelement.getAttribute("data-overscale") == "false")
 			{
@@ -174,10 +175,10 @@ class Lightbox extends DOMElement{
 				var sizes = this.calculateLightboxSizes(ratio);
 			}
 		}
-		
+
 		// Apply the height and width
-		this.node.style.width = sizes.width;
-		this.node.style.height = sizes.height;
+		// this.node.style.width = sizes.width;
+		// this.node.style.height = sizes.height;
 
 		this.lightbox.node.style.height = sizes.playerheight + "px";
 		this.lightbox.node.style.width = sizes.playerwidth + "px";
@@ -194,18 +195,18 @@ class Lightbox extends DOMElement{
 		var sizes = {};
 
 		// Get window width && height
-		sizes.width = window.clientWidth
+		sizes.width = window.innerWidth
 		|| document.documentElement.clientWidth
 		|| document.body.clientWidth
 		|| window.innerWidth;
-		sizes.height = window.clientHeight
+		sizes.height = window.innerHeight
 		|| document.documentElement.clientHeight
 		|| document.body.clientHeight
 		|| window.innerHeight;
 
 		// Window is wide enough
 		if(sizes.height/sizes.width > ratio)
-		{	
+		{
 			// Check if the lightbox should overscale, even if video is smaller
 			if(typeof maxwidth !== 'undefined' && maxwidth < sizes.width * .90){
 				sizes.playerwidth = maxwidth;
@@ -246,7 +247,7 @@ class Lightbox extends DOMElement{
 
 	/**
 	 * Returns the player
-	 * @return {Player object}	
+	 * @return {Player object}
 	 */
 	getPlayer(){
 		if(this.player !== undefined){
